@@ -1,1 +1,9 @@
 
+set <variable name> <variable_value> (to create variable)
+put "ANYTHING" (to print the value of anything which is between "")
+set z<result>( to assign z with value of result)
+set ns[new simulator]
+event scheduling
+$ns at <time> <event =
+for ex . $ns at <puts\><hello world\= 
+to run ns - $ns run
