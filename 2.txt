@@ -1,1 +1,1 @@
-
+ifconfig ,ip, traceroute, ping, netstat, route, iwconfig, hostname, curl, arp, nslookup
