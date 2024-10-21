@@ -1,0 +1,207 @@
+Practical Exam - exp 2, 5, 6,7,8,10
+
+#exp2 - some networking commands
+ifconfig ,ip, traceroute, ping, netstat, route, iwconfig, hostname, curl, arp, nslookup
+
+#exp5
+#include<stdio.h>
+
+void main() {
+    int data[7], rec[7], i, c1, c2, c3, c;
+
+    printf("This works for a message of 4 bits in size.\nEnter message bits one by one: ");
+    scanf("%d%d%d%d", &data[0], &data[1], &data[2], &data[4]);
+
+    data[6] = data[0] ^ data[2] ^ data[4];
+    data[5] = data[0] ^ data[1] ^ data[4];
+    data[3] = data[0] ^ data[1] ^ data[2];
+
+    printf("\nThe encoded bits are: \n");
+    for (i = 0; i < 7; i++) {
+        printf("%d ", data[i]);
+    }
+
+    printf("\nEnter the received data bits one by one: ");
+    for (i = 0; i < 7; i++) {
+        scanf("%d", &rec[i]);
+    }
+
+    c1 = rec[6] ^ rec[4] ^ rec[2] ^ rec[0];
+    c2 = rec[5] ^ rec[4] ^ rec[1] ^ rec[0];
+    c3 = rec[3] ^ rec[2] ^ rec[1] ^ rec[0];
+
+    c = c3 * 4 + c2 * 2 + c1;
+
+    if (c == 0) {
+        printf("\nCongratulations! There is no error.\n");
+    } else {
+        printf("\nError at position: %d\n", c);
+        printf("The correct message is: \n");
+
+        if (rec[7 - c] == 0)
+            rec[7 - c] = 1;
+        else
+            rec[7 - c] = 0;
+
+        for (i = 0; i < 7; i++) {
+            printf("%d ", rec[i]);
+        }
+        printf("\n");
+    }
+}
+
+#exp6
+set <variable name> <variable_value> (to create variable)
+put "ANYTHING" (to print the value of anything which is between "")
+set z<result>( to assign z with value of result)
+set ns[new simulator]
+event scheduling
+$ns at <time> <event =
+for ex . $ns at <puts\><hello world\= 
+to run ns - $ns run
+
+#exp7
+set ns [new Simulator]
+$ns color 1 Blue
+$ns color 2 Green
+set nf [open out.nam w]
+$ns namtrace-all $nf
+proc finish {} {
+ global ns nf
+ $ns flush-trace
+ close $nf
+ exec nam out.nam &
+ exit 0
+}
+set n0 [$ns node]
+set n1 [$ns node]
+set n2 [$ns node]
+set n3 [$ns node]
+set n4 [$ns node]
+set n5 [$ns node]
+set n6 [$ns node]
+$ns duplex-link $n0 $n2 2Mb 10ms DropTail
+$ns duplex-link $n1 $n2 2Mb 10ms DropTail
+$ns duplex-link $n2 $n3 1.7Mb 20ms DropTail
+$ns duplex-link $n3 $n4 2Mb 10ms DropTail
+$ns duplex-link $n4 $n5 2Mb 10ms DropTail
+$ns duplex-link $n4 $n5 2Mb 15ms DropTail
+$ns duplex-link $n5 $n6 2Mb 10ms DropTail
+$ns queue-limit $n2 $n3 10
+$ns queue-limit $n3 $n4 10
+$ns duplex-link-op $n0 $n2 orient left-up
+$ns duplex-link-op $n1 $n2 orient left-down
+$ns duplex-link-op $n2 $n3 orient left-up
+$ns duplex-link-op $n3 $n4 orient left
+$ns duplex-link-op $n4 $n5 orient left-down
+$ns duplex-link-op $n4 $n5 orient left-up
+$ns duplex-link-op $n5 $n6 orient left-down
+$ns duplex-link-op $n2 $n3 queuePos 0.5
+set tcp [new Agent/TCP]
+$tcp set class_ 2
+$ns attach-agent $n0 $tcp
+set sink [new Agent/TCPSink]
+$ns attach-agent $n6 $sink
+$ns connect $tcp $sink
+$tcp set fid_ 1
+set ftp [new Application/FTP]
+$ftp attach-agent $tcp
+$ftp set type_ FTP
+set udp [new Agent/UDP]
+$ns attach-agent $n1 $udp
+set null [new Agent/Null]
+$ns attach-agent $n5 $null
+$ns connect $udp $null
+$udp set fid_ 2
+set cbr [new Application/Traffic/CBR]
+$cbr attach-agent $udp
+$cbr set type_ CBR
+$cbr set packet_size_ 2000
+$cbr set rate_ 1mb
+$cbr set random_ false
+$ns at 0.1 "$cbr start"
+$ns at 1.0 "$ftp start"
+$ns at 4.0 "$ftp stop"
+$ns at 4.5 "$cbr stop"
+$ns at 4.5 "$ns detach-agent $n0 $tcp ; $ns detach-agent $n5 $sink"
+$ns at 6.0 "finish"
+puts "CBR packet size = [$cbr set packet_size_]"
+puts "CBR interval = [$cbr set interval_]"
+
+#exp8-state routing
+set ns [new Simulator]
+$ns rtproto DV
+set nf [open out.nam w]
+$ns namtrace-all $nf
+proc finish {} {
+ global ns nf
+ $ns flush-trace
+ close $nf
+ exec nam out.nam &
+ exit 0
+}
+set n0 [$ns node]
+set n1 [$ns node]
+set n2 [$ns node]
+set n3 [$ns node]
+set n4 [$ns node]
+set n5 [$ns node]
+set n6 [$ns node]
+$ns duplex-link $n0 $n1 10Mb 10ms DropTail
+$ns duplex-link $n1 $n2 10Mb 10ms DropTail
+$ns duplex-link $n2 $n3 10Mb 10ms DropTail
+$ns duplex-link $n3 $n4 10Mb 10ms DropTail
+$ns duplex-link $n3 $n0 10Mb 10ms DropTail
+$ns duplex-link $n0 $n4 10Mb 10ms DropTail
+$ns duplex-link $n4 $n2 10Mb 10ms DropTail
+$ns duplex-link $n1 $n4 10Mb 10ms DropTail
+$ns duplex-link $n4 $n3 10Mb 10ms DropTail
+$ns duplex-link $n4 $n5 10Mb 10ms DropTail
+$ns duplex-link $n3 $n5 10Mb 10ms DropTail
+$ns duplex-link $n4 $n6 10Mb 10ms DropTail
+$ns duplex-link $n3 $n6 10Mb 10ms DropTail
+$ns duplex-link-op $n0 $n1 orient right
+$ns duplex-link-op $n1 $n2 orient down
+$ns duplex-link-op $n2 $n3 orient left
+$ns duplex-link-op $n3 $n0 orient right
+$ns duplex-link-op $n0 $n4 orient right-down
+$ns duplex-link-op $n4 $n2 orient right-down
+$ns duplex-link-op $n1 $n4 orient left-down
+$ns duplex-link-op $n4 $n3 orient left-down
+$ns duplex-link-op $n4 $n5 orient left-down
+$ns duplex-link-op $n3 $n5 orient left-down
+$ns duplex-link-op $n4 $n6 orient left-down
+$ns duplex-link-op $n3 $n6 orient left-down
+
+#exp10
+import java.net.*;
+import java.io.*;
+public class Server
+{
+public static void main(String args[])throws IOException
+{
+ServerSocket s=new ServerSocket(1234);
+Socket s1=s.accept();
+OutputStream s1out=s1.getOutputStream();
+DataOutputStream dos =new DataOutputStream(s1out);
+dos.writeUTF("YourName \n ******\n *****\n ****\n ***\n **\n *");
+dos.close();
+s1.close();
+}
+}
+import java.net.*;
+import java.io.*;
+public class Client
+{
+public static void main(String args[])throws IOException
+{
+Socket c1=new Socket("localhost",1234);
+InputStream s1=c1.getInputStream();
+DataInputStream dis=new DataInputStream(s1);
+String st=new String(dis.readUTF());
+System.out.println(st);
+dis.close();
+s1.close();
+c1.close();
+}
+}
