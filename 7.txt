@@ -35,33 +35,3 @@ $ns duplex-link-op $n4 $n5 orient left-down
 $ns duplex-link-op $n4 $n5 orient left-up
 $ns duplex-link-op $n5 $n6 orient left-down
 $ns duplex-link-op $n2 $n3 queuePos 0.5
-set tcp [new Agent/TCP]
-$tcp set class_ 2
-$ns attach-agent $n0 $tcp
-set sink [new Agent/TCPSink]
-$ns attach-agent $n6 $sink
-$ns connect $tcp $sink
-$tcp set fid_ 1
-set ftp [new Application/FTP]
-$ftp attach-agent $tcp
-$ftp set type_ FTP
-set udp [new Agent/UDP]
-$ns attach-agent $n1 $udp
-set null [new Agent/Null]
-$ns attach-agent $n5 $null
-$ns connect $udp $null
-$udp set fid_ 2
-set cbr [new Application/Traffic/CBR]
-$cbr attach-agent $udp
-$cbr set type_ CBR
-$cbr set packet_size_ 2000
-$cbr set rate_ 1mb
-$cbr set random_ false
-$ns at 0.1 "$cbr start"
-$ns at 1.0 "$ftp start"
-$ns at 4.0 "$ftp stop"
-$ns at 4.5 "$cbr stop"
-$ns at 4.5 "$ns detach-agent $n0 $tcp ; $ns detach-agent $n5 $sink"
-$ns at 6.0 "finish"
-puts "CBR packet size = [$cbr set packet_size_]"
-puts "CBR interval = [$cbr set interval_]"
