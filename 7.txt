@@ -28,6 +28,7 @@ $ns duplex-link $n5 $n6 2Mb 10ms DropTail
 $ns queue-limit $n2 $n3 10
 $ns queue-limit $n3 $n4 10
 $ns duplex-link-op $n0 $n2 orient left-up
+$ns run
 $ns duplex-link-op $n1 $n2 orient left-down
 $ns duplex-link-op $n2 $n3 orient left-up
 $ns duplex-link-op $n3 $n4 orient left
