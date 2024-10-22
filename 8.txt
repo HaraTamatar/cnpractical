@@ -41,4 +41,4 @@ $ns duplex-link-op $n4 $n5 orient left-down
 $ns duplex-link-op $n3 $n5 orient left-down
 $ns duplex-link-op $n4 $n6 orient left-down
 $ns duplex-link-op $n3 $n6 orient left-down
-
+$ns run
